@@ -8,7 +8,16 @@ import (
 
 func MigrateDB() {
     err := DB.AutoMigrate(
-        &models.Doctor{}, // Include other models here as necessary
+			&models.User{},
+        &models.Doctor{},
+				&models.Password{},
+				&models.Education{},
+				&models.Specialty{},
+				&models.Schedule{},
+				&models.Booking{},
+				&models.Review{},
+				&models.Location{},
+				
     )
     if err != nil {
         log.Fatalf("Error migrating database: %v", err)

@@ -22,6 +22,7 @@ func main() {
     cfg := config.LoadConfig()
     database.ConnectDB(cfg)
     database.MigrateDB()
+		database.SeedDB()
 
     r := api.InitRoutes()
     log.Println("Starting server on :8080")

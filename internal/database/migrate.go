@@ -7,10 +7,10 @@ import (
 )
 
 func MigrateDB() {
-    err := DB.AutoMigrate(&models.User{})
+    err := DB.AutoMigrate(
+        &models.Doctor{}, // Include other models here as necessary
+    )
     if err != nil {
-        log.Fatal("Failed to migrate database", err)
+        log.Fatalf("Error migrating database: %v", err)
     }
-
-    log.Println("Database migrated!")
 }

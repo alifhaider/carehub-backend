@@ -4,7 +4,6 @@ import "gorm.io/gorm"
 
 type Doctor struct {
     gorm.Model
-    FullName       *string  `gorm:"type:varchar(255)" json:"fullName,omitempty"`
 		PhoneNumber    *string  `gorm:"type:varchar(255)" json:"phoneNumber,omitempty"`
 		ProfilePicture  *string  `gorm:"type:varchar(255)" json:"profilePicture,omitempty"`
 		Specialties     []Specialty  `gorm:"foreignKey:DoctorID" json:"specialties,omitempty"`

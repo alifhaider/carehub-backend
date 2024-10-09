@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/alifhaider/carehub-backend/controller"
+	"github.com/alifhaider/carehub-backend/controllers"
 	"github.com/alifhaider/carehub-backend/database"
+	"github.com/alifhaider/carehub-backend/middleware"
 	"github.com/alifhaider/carehub-backend/models"
-	"github.com/alifhaider/carehub-backend/util"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -51,30 +51,30 @@ func loadDatabase() {
 
 func seedData() {
 	var roles = []models.Role{{Name: "doctor", Description: "Doctor role"}, {Name: "user", Description: "User role"}, {Name: "admin", Description: "Admin role"}}
-	var user = []models.User{{Username: "alif", Email: "alif.dev", Password: "222222", RoleID: 3}}
+	var user = []models.User{{Username: "alif", Email: "alif.dev", Password: "222222", RoleID: 3, FullName: "Alif Haider"}}
 	database.Db.Save(&roles)
 	database.Db.Save(&user)
 }
 
 func serveApplication() {
 	router := gin.Default()
-	authRoutes := router.Group("/auth/user")
+	// authRoutes := router.Group("/auth/user")
 	// registration route
-	authRoutes.POST("/register", controller.Register)
-	// login route
-	authRoutes.POST("/login", controller.Login)
+	router.POST("/register", controllers.SignUp)
+	router.POST("/login", controllers.Login)
+	router.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
-	doctorRoutes := router.Group("/doctor")
-	doctorRoutes.Use(util.JWTAuth())
+	// doctorRoutes := router.Group("/doctor")
+	// doctorRoutes.Use(util.JWTAuth())
 
-	adminRoutes := router.Group("/admin")
-	adminRoutes.Use(util.JWTAuth())
-	adminRoutes.GET("/users", controller.GetUsers)
-	adminRoutes.GET("/user/:id", controller.GetUser)
-	adminRoutes.PUT("/user/:id", controller.UpdateUser)
-	adminRoutes.POST("/user/role", controller.CreateRole)
-	adminRoutes.GET("/user/roles", controller.GetRoles)
-	adminRoutes.PUT("/user/role/:id", controller.UpdateRole)
+	// adminRoutes := router.Group("/admin")
+	// adminRoutes.Use(util.JWTAuth())
+	// adminRoutes.GET("/users", controller.GetUsers)
+	// adminRoutes.GET("/user/:id", controller.GetUser)
+	// adminRoutes.PUT("/user/:id", controller.UpdateUser)
+	// adminRoutes.POST("/user/role", controller.CreateRole)
+	// adminRoutes.GET("/user/roles", controller.GetRoles)
+	// adminRoutes.PUT("/user/role/:id", controller.UpdateRole)
 
 	router.Run(":8000")
 	fmt.Println("Server running on port 8000")

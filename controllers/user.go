@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -67,14 +66,11 @@ func SignUp(c *gin.Context) {
 	}
 
 	// hash the password
-	log.Println("password during registration", body.Password)
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash the password"})
 		return
 	}
-
-	log.Println("passwordHash after hashing", string(passwordHash))
 
 	// Create a new user
 	user := models.User{
@@ -126,13 +122,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	log.Println("passwordHash from db", user.Password)
-	log.Println("password from body", body.Password)
-
 	// Validate the password
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if err != nil {
-		log.Println("Password comparison failed: ", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid password"})
 		return
 	}
@@ -159,6 +151,5 @@ func Login(c *gin.Context) {
 
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
-	log.Println("user from context", user)
 	c.JSON(http.StatusOK, gin.H{"user": user})
 }

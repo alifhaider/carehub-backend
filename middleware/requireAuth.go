@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -17,13 +16,10 @@ func RequireAuth(c *gin.Context) {
 	// Get the cookie from the request
 	tokenString, err := c.Cookie("Authorization")
 	if err != nil {
-		log.Println("error getting token from cookie: ", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization cookie not found"})
 		c.Abort()
 		return
 	}
-
-	log.Printf("tokenString: %v", tokenString)
 
 	// Decode/Validate the JWT token
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -35,7 +31,6 @@ func RequireAuth(c *gin.Context) {
 
 	if err != nil {
 		// Handle malformed token error
-		log.Println("JWT parsing error:", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or malformed token"})
 		c.Abort()
 		return
